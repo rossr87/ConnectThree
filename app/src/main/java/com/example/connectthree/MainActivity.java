@@ -34,24 +34,33 @@ public class MainActivity extends AppCompatActivity {
         Log.i("Info", "Position (pos): " + pos);
 
         /*
-        Request to the controller, to change the state of the board.
-        The View doesn't really need to be aware of the colour of the Counter in terms, of the request
-        send to the controller.
+        - Request to the controller, to change the state of the board.
+        - Notice how we pass the position of the counter to the method?
+                For any given column, set the position with the largest integer.
+        - OK, I will use an exception for this. It doesn't make sense to drop a counter
+                into a cell that is already occupied.
          */
-        boardController.dropCounter(pos);
+        try {
+            boardController.dropCounter(pos);
+            if (!boardController.isRedsTurn()) {
+                imageView.setImageResource(R.drawable.yellow);
+            }
+
+            imageView.setTranslationY(-2000);
+            imageView.setAlpha(1f);
+
+            imageView.animate().translationYBy(2000).setDuration(1500);
+        }
+        catch (PositionAlreadySetException e) {
+            Log.i("Error", e.getMessage());
+        }
+
         Log.i("Board Model: ", boardModel.toString());
 
         /*
         Set Red or Yellow accordingly.
          */
-        if (boardController.isRedsTurn()) {
-            imageView.setImageResource(R.drawable.yellow);
-        }
 
-        imageView.setTranslationY(-2000);
-        imageView.setAlpha(1f);
-
-        imageView.animate().translationYBy(2000).setDuration(1500);
     }
 
     @Override

@@ -5,6 +5,6 @@ package com.example.connectthree;
  */
 
 public interface BoardControllerInterface {
-    public void dropCounter(int pos);
+    public void dropCounter(int pos) throws PositionAlreadySetException;
     public boolean isRedsTurn();
 }

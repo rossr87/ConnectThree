@@ -11,7 +11,7 @@ public class BoardController implements BoardControllerInterface {
         this.boardModel = boardModel;
     }
 
-    public void dropCounter(int pos) {
+    public void dropCounter(int pos) throws PositionAlreadySetException {
         boardModel.setCell(pos);
     }
 

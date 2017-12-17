@@ -13,7 +13,7 @@ public interface BoardModelInterface {
     - Indicate to the model that a player wants to drop a counter.
     - Check whether the game has been won
      */
-    public void setCell(int pos);                /* called each time a player takes a turn */
+    public void setCell(int pos) throws PositionAlreadySetException;                /* called each time a player takes a turn */
     public boolean hasWon();                     /* called to check whether a player has won */
 
     /*

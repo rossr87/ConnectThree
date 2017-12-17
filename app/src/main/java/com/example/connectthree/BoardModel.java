@@ -1,5 +1,7 @@
 package com.example.connectthree;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,14 +19,18 @@ public class BoardModel implements BoardModelInterface {
         initialiseBoard();
     }
 
-    public void setCell(int pos) {
-        if (isRedsTurn()) {
+    public void setCell(int pos) throws PositionAlreadySetException {
+
+        if (isRedsTurn() && (cellList.get(pos).getState() == CellState.EMPTY)) {
             cellList.get(pos).setState(CellState.RED);
             setRedsTurn(false);
         }
-        else {
+        else if (!isRedsTurn() && (cellList.get(pos).getState() == CellState.EMPTY)) {
             cellList.get(pos).setState(CellState.YELLOW);
             setRedsTurn(true);
+        }
+        else {
+            throw new PositionAlreadySetException();
         }
     }
 

@@ -11,7 +11,12 @@ class Cell {
     CellState state = CellState.EMPTY;
 
     public void setState(CellState state) {
+
         this.state = state;
+    }
+
+    public CellState getState() {
+        return this.state;
     }
 
     /*
