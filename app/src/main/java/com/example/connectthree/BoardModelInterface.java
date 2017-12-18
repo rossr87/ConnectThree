@@ -27,5 +27,6 @@ public interface BoardModelInterface {
 
     public boolean isRedsTurn();
     public void setRedsTurn(boolean redsTurn);
+    public int getSuitablePosition(int pos);
 
 }

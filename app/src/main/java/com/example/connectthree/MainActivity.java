@@ -1,5 +1,6 @@
 package com.example.connectthree;
 
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,7 +21,7 @@ Ok, Red goes first. We'll refactor later to change this!
 public class MainActivity extends AppCompatActivity {
     BoardModelInterface boardModel = new BoardModel();                                  /* Reference to the Model */
     BoardControllerInterface boardController = new BoardController(boardModel);         /* Reference to the Controller */
-    List<ImageView> imageViews = new ArrayList<ImageView>();                            /* A nice list of imageViews */
+    List<ImageView> imageViews = new ArrayList<ImageView>();                                    /* A nice list of imageViews */
     GridLayout layout;                                                                  /* We need to reference our gridlayout */
 
 
@@ -33,13 +34,13 @@ public class MainActivity extends AppCompatActivity {
         int pos = indexOfImageViews(imageView);
         Log.i("Info", "Position (pos): " + pos);
 
-        /*
-        - Request to the controller, to change the state of the board.
-        - Notice how we pass the position of the counter to the method?
-                For any given column, set the position with the largest integer.
-        - OK, I will use an exception for this. It doesn't make sense to drop a counter
-                into a cell that is already occupied.
-         */
+        // get the appropriate position
+        pos = boardModel.getSuitablePosition(pos);
+        Log.i("Info", "Appropriate Position (pos):" + pos);
+
+        //get appropriate child view
+        imageView = (ImageView)layout.getChildAt(pos);
+
         try {
             boardController.dropCounter(pos);
             if (!boardController.isRedsTurn()) {
@@ -48,18 +49,14 @@ public class MainActivity extends AppCompatActivity {
 
             imageView.setTranslationY(-2000);
             imageView.setAlpha(1f);
-
             imageView.animate().translationYBy(2000).setDuration(1500);
+            Log.i("Info", "A user has won: " + boardModel.hasWon());
         }
         catch (PositionAlreadySetException e) {
             Log.i("Error", e.getMessage());
         }
 
         Log.i("Board Model: ", boardModel.toString());
-
-        /*
-        Set Red or Yellow accordingly.
-         */
 
     }
 
@@ -68,9 +65,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        /*
-        We'll create a list of image views.
-         */
         layout = findViewById(R.id.gridLayoutBoard);
         Log.i("Info", "Got reference to GridLayout");
         initialiseImageViewList();
@@ -80,17 +74,9 @@ public class MainActivity extends AppCompatActivity {
     private void initialiseImageViewList() {
         int i = 0;
 
-        /*
-        Get the number of child views from the parent view - the GridLayout.
-         */
         int count = layout.getChildCount();
-
         Log.i("Info", "Child Count for GridLayout is: " + count);
 
-        /*
-        Generate a list of references to each child view that acts
-        as a "cell" on the board.
-         */
         for (; i < 9; ++i) {
             imageViews.add((ImageView) layout.getChildAt(i));
         }

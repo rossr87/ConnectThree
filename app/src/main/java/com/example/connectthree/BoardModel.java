@@ -35,9 +35,66 @@ public class BoardModel implements BoardModelInterface {
     }
 
     public boolean hasWon() {
-
-        return hasWon;
+        return (checkHorizontalWin() ||
+                checkVerticalWin() ||
+                checkDiagonalWin());
     }
+
+    private boolean checkHorizontalWin() {
+        boolean won = false;
+
+        for (int i = 0; i <= 6 ; i +=3) {
+                if (
+                        (cellList.get(i).getState() != CellState.EMPTY) &&
+                        (cellList.get(i).getState() == cellList.get(i+1).getState()) &&
+                        (cellList.get(i).getState() == cellList.get(i+2).getState())
+                        ) {
+                    won = true;
+                }
+        }
+        return won;
+    }
+
+    private boolean checkVerticalWin() {
+        boolean won = false;
+
+        for (int i = 0; i <= 2; ++i) {
+            if(
+                    (cellList.get(i).getState() != CellState.EMPTY) &&
+                    (cellList.get(i).getState() == cellList.get(i+3).getState()) &&
+                    (cellList.get(i).getState() == cellList.get(i+6).getState())
+                    ) {
+                won = true;
+            }
+        }
+        return won;
+    }
+
+    private boolean checkDiagonalWin() {
+        boolean won = false;
+        int i = 0;
+
+        if (
+                                    (cellList.get(i).getState() != CellState.EMPTY) &&
+                                    (cellList.get(i).getState() == cellList.get(i + 4).getState()) &&
+                                    (cellList.get(i).getState() == cellList.get(i + 8).getState())
+                ) {
+                won = true;
+        }
+
+        i = 2;
+        if (
+                        (cellList.get(i).getState() != CellState.EMPTY) &&
+                        (cellList.get(i).getState() == cellList.get(i + 2).getState()) &&
+                        (cellList.get(i).getState() == cellList.get(i + 4).getState())
+                ) {
+
+             won = true;
+        }
+
+        return won;
+    }
+
 
     public void registerBoardObserver(BoardObserver boardObserver) {
         boardObserverList.add(boardObserver);
@@ -60,6 +117,39 @@ public class BoardModel implements BoardModelInterface {
 
     public void setRedsTurn(boolean redsTurn) {
         this.redsTurn = redsTurn;
+    }
+
+    /*
+     * Instead of the counter dropping in to the view that
+     * the user selects, this routine finds the next available
+     * position in the column.
+     * When a player taps on a view in a given column, the next available
+     * view from the column is selected.
+     */
+    public int getSuitablePosition(int pos) {
+        int maxPosForColumn = 0;
+        int i = 0;
+
+        if ((pos % 3) == 0) {
+            maxPosForColumn = 6;
+        } else if ((pos % 3) == 1) {
+            maxPosForColumn = 7;
+        } else if ((pos % 3) == 2) {
+            maxPosForColumn = 8;
+        } else {
+            Log.e("Error", "Invalid position: " + pos);
+        }
+        for (i = maxPosForColumn; i >= pos; i -=3) {
+            if (cellList.get(i).getState() == CellState.EMPTY) {
+                break;
+            }
+        }
+
+        if (i < 0) {
+            i = pos;
+        }
+
+        return i;
     }
 
     @Override
