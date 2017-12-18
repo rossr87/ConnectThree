@@ -12,6 +12,7 @@ import java.util.List;
 public class BoardModel implements BoardModelInterface {
     List<BoardObserver> boardObserverList = new ArrayList<BoardObserver>();
     List<Cell> cellList = new ArrayList<Cell>();
+    List<Integer> winningSequence = new ArrayList<Integer>();
     boolean hasWon;
     boolean redsTurn;
 
@@ -34,6 +35,16 @@ public class BoardModel implements BoardModelInterface {
         }
     }
 
+    public List<Integer> getWinningSequence() {
+        return winningSequence;
+    }
+
+    private void setWinningSequence(final int a, final int b, final int c) {
+        winningSequence.add(a);
+        winningSequence.add(b);
+        winningSequence.add(c);
+    }
+
     public boolean hasWon() {
         return (checkHorizontalWin() ||
                 checkVerticalWin() ||
@@ -50,6 +61,8 @@ public class BoardModel implements BoardModelInterface {
                         (cellList.get(i).getState() == cellList.get(i+2).getState())
                         ) {
                     won = true;
+                    setWinningSequence(i, i+1, i+2);
+                    break;
                 }
         }
         return won;
@@ -65,6 +78,8 @@ public class BoardModel implements BoardModelInterface {
                     (cellList.get(i).getState() == cellList.get(i+6).getState())
                     ) {
                 won = true;
+                setWinningSequence(i, i+3, i+6);
+                break;
             }
         }
         return won;
@@ -80,6 +95,7 @@ public class BoardModel implements BoardModelInterface {
                                     (cellList.get(i).getState() == cellList.get(i + 8).getState())
                 ) {
                 won = true;
+                setWinningSequence(i, i+4, i+8);
         }
 
         i = 2;
@@ -88,13 +104,12 @@ public class BoardModel implements BoardModelInterface {
                         (cellList.get(i).getState() == cellList.get(i + 2).getState()) &&
                         (cellList.get(i).getState() == cellList.get(i + 4).getState())
                 ) {
-
              won = true;
+            setWinningSequence(i, i+2, i+4);
         }
 
         return won;
     }
-
 
     public void registerBoardObserver(BoardObserver boardObserver) {
         boardObserverList.add(boardObserver);

@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
@@ -49,8 +52,16 @@ public class MainActivity extends AppCompatActivity {
 
             imageView.setTranslationY(-2000);
             imageView.setAlpha(1f);
-            imageView.animate().translationYBy(2000).setDuration(1500);
+            imageView.animate().translationYBy(2000).setDuration(800);
             Log.i("Info", "A user has won: " + boardModel.hasWon());
+
+            List<Integer> winningSequence = boardModel.getWinningSequence();
+
+            for (int i = 0; boardModel.hasWon() && i < 5; ++i) {
+                flashWinningSequence(winningSequence);
+                Log.i("Info","Flash Flash Flash");
+                endOfGame();
+            }
         }
         catch (PositionAlreadySetException e) {
             Log.i("Error", e.getMessage());
@@ -90,5 +101,28 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return i;
+    }
+
+    private void flashWinningSequence(List<Integer> winningSequence) {
+        ImageView counter;
+
+        Log.i("Info", "Winning Sequence is: ");
+
+        for (int i = 0; i < winningSequence.size(); ++i) {
+            counter = (ImageView) layout.getChildAt(winningSequence.get(i));
+            Animation animation = new AlphaAnimation(1, 0);
+            animation.setStartOffset(800);
+            animation.setDuration(200);
+            animation.setInterpolator(new LinearInterpolator());
+            animation.setRepeatCount(6);
+            animation.setRepeatMode(Animation.REVERSE);
+            counter.startAnimation(animation);
+        }
+    }
+
+    private void endOfGame() {
+        for (ImageView imageView : imageViews) {
+            imageView.setClickable(false );
+        }
     }
 }

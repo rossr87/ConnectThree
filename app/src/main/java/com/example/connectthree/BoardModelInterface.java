@@ -1,5 +1,7 @@
 package com.example.connectthree;
 
+import java.util.List;
+
 /**
  * Created by Ross on 12/12/2017.
  *
@@ -25,6 +27,7 @@ public interface BoardModelInterface {
     public void registerBoardObserver(BoardObserver boardObserver);
     public void removeBoardObserver(BoardObserver boardObserver);
 
+    public List<Integer> getWinningSequence();
     public boolean isRedsTurn();
     public void setRedsTurn(boolean redsTurn);
     public int getSuitablePosition(int pos);
